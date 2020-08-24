@@ -1,0 +1,37 @@
+body {
+    /*background-color: #001011;*/
+    background-color: #010511;
+
+    /*font-family: Verdana, Geneva, sans-serif;*/
+    font-family: 'Lato', sans-serif;
+}
+
+text.title {
+	fill:#fff;
+	font-size: 200%;
+
+}
+text.legend {
+
+	text-anchor: middle;
+	fill:#fff;
+
+}
+
+text.label {
+	fill:#888;
+	font-size: 100%;
+	/*font-family: Verdana, Geneva, sans-serif;*/
+	text-anchor: middle;
+	baseline-shift: 50;
+}
+
+text.selected {
+	/*fill:#000;*/
+	fill:#010511;
+
+}
+rect.label_bg {
+	fill:#fff;
+	opacity:0.5;
+}

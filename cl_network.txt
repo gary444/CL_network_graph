@@ -1,0 +1,4 @@
+started in 1992
+
+data sources:
+https://github.com/jalapic/engsoccerdata/blob/master/data-raw/champs.csv

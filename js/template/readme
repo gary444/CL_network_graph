@@ -1,0 +1,5 @@
+to start watch mode - npm run webpack
+
+to start server: python3  -m http.server 8000
+
+latest d3: https://github.com/d3/d3/wiki

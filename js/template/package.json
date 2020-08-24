@@ -1,0 +1,18 @@
+{
+  "name": "VisTemplate",
+  "version": "1.0.0",
+  "description": "Explanation of Project in ProjectInfo.pdf file.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run webpack",
+    "webpack": "webpack -d --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "4.20.2",
+    "webpack-cli": "3.1.2"
+  }
+}
