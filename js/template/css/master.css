@@ -9,12 +9,26 @@ body {
 text.title {
 	fill:#fff;
 	font-size: 200%;
+	text-anchor: start;
+}
 
+text.subtitle {
+	fill:#888;
+	font-size: 80%;
+	text-anchor: start;
 }
 text.legend {
 
+	text-anchor: start;
+	fill:#888;
+	font-size: 80%;
+
+}
+text.scale {
+
 	text-anchor: middle;
-	fill:#fff;
+	/*fill:#888;*/
+	/*font-size: 80%;*/
 
 }
 
@@ -33,5 +47,5 @@ text.selected {
 }
 rect.label_bg {
 	fill:#fff;
-	opacity:0.5;
+	opacity:0.7;
 }

@@ -4,7 +4,13 @@ function radius(d){
 	return get_node_radius_for_matches(d.matches)
 }
 function get_node_radius_for_matches(matches) {
-	return Math.max(5,matches/5);
+	// return Math.max(5,matches/5);
+	// var scale = d3.scaleLinear()
+	var scale = d3.scaleSqrt()
+	  .domain([1, 250])
+	  .range([3, 40]);
+
+	return scale(matches);
 }
 
 function hide_elements_without_location(d,i,locations) {
@@ -31,31 +37,21 @@ export class CLNetwork {
 
 		this.center = [width / 2, height / 2];
 
-		this.simulation = d3.forceSimulation(this.nodes)
-		  // .force("link", d3.forceLink(links).id(d => d.id))
-		  
-		  .force("collision", d3.forceCollide(radius).strength(1))
-		  .force("center", d3.forceCenter(this.center[0], this.center[1]))
-		  .force("charge", d3.forceManyBody().strength(0.5))
-		  .alphaMin(0.1)
+		// this.simulation = d3.forceSimulation(this.nodes)
+		  // .force("collision", d3.forceCollide(radius).strength(1))
+		  // .force("center", d3.forceCenter(this.center[0], this.center[1]))
+		  // .force("charge", d3.forceManyBody().strength(0.5))
+		  // .alphaMin(0.1)
 
 
 
 		const svg = d3.select("body").append("svg")
-		  // .attr("viewBox", [0, 0, width, height]);
 		  .attr("width", width)
 		  .attr("height", height);
 
 		  
 		const link = svg.append("g")
 		    .classed("links", true)
-		//   .attr("stroke", "#999")
-		//   .attr("stroke-opacity", 0.6)
-		// .selectAll("line")
-		// .data(links)
-		//   .enter().append("line")
-		//   .attr("stroke-width", 1);
-
 
 		svg.append("g").classed("titles", true)
 		svg.append("g").classed("rects", true)
@@ -77,60 +73,76 @@ export class CLNetwork {
 		  .on("click", d => this.show_opponents(d))
 
 
+		// this.simulation.on("tick", () => {
 
-		this.simulation.on("tick", () => {
-
-			node
-			    .attr("cx", d => d.x)
-			    .attr("cy", d => d.y);
+		// 	node
+		// 	    .attr("cx", d => d.x)
+		// 	    .attr("cy", d => d.y);
 			
-		});
+		// });
 
 
-		this.simulation.on("end", () => {
+		// this.simulation.on("end", () => {
 			
-			this.node_enter
-				.append("text")
-				.classed("label", true)
-				.text(d => d.name)
-			    .attr("x", d => d.x)
-			    .attr("y", d => d.y);
-
-			d3.select("g.nodes")
-				.selectAll("circle")
-				.sort( (a,b) => {
-					console.log("sort")
-					return a.r <= b.r ;
-				})
+		this.node_enter
+			.append("text")
+			.classed("label", true)
+			.text(d => d.name)
+		    .attr("x", d => d.x)
+		    .attr("y", d => d.y);
 
 
-		});
+
+		const title_line_pos = 0.75
+		const legend_middle_x = 1.0 - ((1.0-title_line_pos) * 0.5)
 
 		// titles
 		svg.select("g.titles").append("text")
 			.classed("title", true)
 			.text("Champions League")
 			// .attr("x", width*0.01)
-			.attr("x", width*0.8)
+			.attr("x", width*(title_line_pos + 0.02))
 			.attr("y", height*0.1)
 
+		// subtitle
+		svg.select("g.titles").append("text")
+			.classed("subtitle", true)
+			.attr("x", width*(title_line_pos + 0.02))
+			.attr("y", height*0.15)
+			.text("All top-level European encounters since 1992 - visualised.")
 
+
+		const legend_y_placement = 0.6
+
+		const legend_circle_x = 0.78
+		const legend_circle_x_gap = 0.04
 
 		// legend - size
 		svg.select("g.titles").append("text")
 			.classed("legend", true)
 			.text("Circle size shows number of Champions League matches played")
-			.attr("x", width*0.85)
-			.attr("y", height*0.3)
+			.attr("x", width*(title_line_pos+0.02))
+			.attr("y", height*legend_y_placement)
 
-		let sizes = [20, 20]
-		svg.select("g.titles").selectAll("circle")
-			.data(sizes)
+		let legend_circle_matches = [1, 50, 100, 150, 200]
+		svg.select("g.titles").selectAll("circle.matches")
+			.data(legend_circle_matches)
 			.enter().append("circle")
-			.attr("r", (d) => {return get_node_radius_for_matches(d);})
-			.attr("cx", (d,i) => width*(i*0.02 + 0.85))
-			.attr("cy", height*0.4)
-			.attr("fill", "#fff")
+			.attr("r", (d) => {
+				return get_node_radius_for_matches(d);
+			})
+			.attr("cx", (d,i) => width*(i*legend_circle_x_gap + legend_circle_x))
+			.attr("cy", height*(legend_y_placement+0.06))
+			.attr("fill", "#888")
+
+		svg.select("g.titles").selectAll("text.scale")
+			.data(legend_circle_matches)
+			.enter().append("text")
+			.classed("legend", true)
+			.classed("scale", true)
+			.text( (d) => d )
+			.attr("x", (d,i) => width*(i*legend_circle_x_gap + legend_circle_x))
+			.attr("y", height*(legend_y_placement+0.12))
 
 
 
@@ -138,20 +150,52 @@ export class CLNetwork {
 		svg.select("g.titles").append("text")
 			.classed("legend", true)
 			.text("Circle colour shows win percentage")
-			.attr("x", width*0.85)
-			.attr("y", height*0.5)
+			.attr("x", width*(title_line_pos+0.02))
+			.attr("y", height*(legend_y_placement+0.17))
 			
+		let legend_circle_wins = [0,0.2,0.4, 0.6, 0.8]
+		svg.select("g.titles").selectAll("circle.wins")
+			.data(legend_circle_wins)
+			.enter().append("circle")
+			.attr("r", 20)
+			.attr("cx", (d,i) => width*(i*legend_circle_x_gap + legend_circle_x))
+			.attr("cy", height*(legend_y_placement+0.22))
+			.attr("fill", color)
 
+		svg.select("g.titles").selectAll("text.wins")
+			.data(legend_circle_wins)
+			.enter().append("text")
+			.classed("legend", true)
+			.classed("scale", true)
+			.text( (d) => d*100 + " %" )
+			.attr("x", (d,i) => width*(i*legend_circle_x_gap + legend_circle_x))
+			.attr("y", height*(legend_y_placement+0.27))
+
+
+		// styling
+
+		svg.select("g.titles")
+			.append("rect")
+			.attr("x", width * title_line_pos)
+			.attr("y", 0)
+			.attr("width", width * 0.001)
+			.attr("height", height * 0.9)
+			.style("fill","#83bbd9")
+
+
+		this.show_opponents(this.nodes[0])
 
 	}
 
 	show_opponents (target_node){
 
 		// stop simulation so that positions can be moved
-		this.simulation.stop();
+		// this.simulation.stop();
 
-		const selected_team_idx = target_node.index;
-		// console.log(selected_team_idx)
+
+		// console.log(target_node)
+
+		const selected_team_idx = target_node.id;
 
 		// filter links to get teams that are connected with the target team
 		let active_links = this.links.filter( function(link)  {
@@ -161,7 +205,7 @@ export class CLNetwork {
 
 		const num_linked_teams = active_links.length;
 
-		console.log(num_linked_teams)
+		// console.log(num_linked_teams)
 
 		// sort in descending order of weights - so most played against teams are added first
 		active_links.sort(function (a,b) {
