@@ -1,5 +1,5 @@
 class Result: 
-	def __init__(self, ht, at, hts, ats,round, date,year):
+	def __init__(self, ht, at, hts, ats,round, date,year, winner = "h"):
 		self.ht = ht
 		self.at = at
 		self.hts = hts
@@ -7,6 +7,7 @@ class Result:
 		self.rnd = round
 		self.date = date
 		self.year = year
+		self.winner = winner
 
 	def __str__(self):
 		return (self.year + " | " + self.date + " (" + \
@@ -14,4 +15,4 @@ class Result:
 			  self.ht + " " +
 			  str(self.hts) + " - " +
 			  str(self.ats) + " " +
-			  self.at)
+			  self.at + "(" + self.winner + ")")

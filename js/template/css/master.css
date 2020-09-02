@@ -32,6 +32,21 @@ text.scale {
 
 }
 
+text.detail {
+
+	text-anchor: start;
+	fill:#fff;
+	/*font-size: 80%;*/
+
+}
+
+text.detail_label {
+
+	text-anchor: end;
+	fill:#888;
+}
+
+
 text.label {
 	fill:#888;
 	font-size: 100%;

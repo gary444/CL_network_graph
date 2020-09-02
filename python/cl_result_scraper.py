@@ -18,6 +18,7 @@ urls = []
 urls.append(('2016', base_url + '2016-2017/results/'))
 urls.append(('2017', base_url + '2017-2018/results/'))
 urls.append(('2018', base_url + '2018-2019/results/'))
+urls.append(('2019', base_url + '2019-2020/results/'))
 
 sel_accept_cookies_btn = "//button[contains(.,'Accept Cookies')]"
 sel_show_more_results_btn = "//a[@class='event__more event__more--static']"

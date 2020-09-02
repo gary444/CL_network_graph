@@ -177,3 +177,16 @@ IPDL protocol error: Handler returned error code!
 1592154310888	Marionette	INFO	Listening on port 57275
 1592154310952	Marionette	WARN	TLS certificate errors will be ignored for this session
 1592154418118	Marionette	INFO	Stopped listening on port 57275
+1599027028225	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/rh/yrrxqz4x0pl78b3lgsfby_v40000gn/T/rust_mozprofileuEo30z"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1599027042876	Marionette	INFO	Listening on port 65258
+1599027447973	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/rh/yrrxqz4x0pl78b3lgsfby_v40000gn/T/rust_mozprofileFa0Kpc"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1599027453991	Marionette	INFO	Listening on port 65331
+1599027454968	Marionette	WARN	TLS certificate errors will be ignored for this session
+1599027468266	Marionette	INFO	Stopped listening on port 65331
+1599027485030	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/rh/yrrxqz4x0pl78b3lgsfby_v40000gn/T/rust_mozprofilemZLfmx"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1599027489176	Marionette	INFO	Listening on port 65460
+1599027489204	Marionette	WARN	TLS certificate errors will be ignored for this session
+1599027615601	Marionette	INFO	Stopped listening on port 65460

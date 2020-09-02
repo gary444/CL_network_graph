@@ -32,7 +32,6 @@ export class CLNetwork {
 		this.nodes = data.nodes.map(d => Object.create(d));
 		
 
-
 		console.log(this.links)
 
 		this.center = [width / 2, height / 2];
@@ -57,6 +56,7 @@ export class CLNetwork {
 		svg.append("g").classed("rects", true)
 		svg.append("g").classed("nodes", true)
 		svg.append("g").classed("labels", true)
+		svg.append("g").classed("details", true)
 
 		this.node_enter = 
 			svg.select("g.nodes")
@@ -71,6 +71,8 @@ export class CLNetwork {
 		  .attr("cy", this.center[1])
 		  .attr("fill", d => color(d.win_pc) )
 		  .on("click", d => this.show_opponents(d))
+		  .on("mouseover", d => this.show_details(d))
+		  .on("mouseout", d => this.hide_details(d))
 
 
 		// this.simulation.on("tick", () => {
@@ -94,7 +96,7 @@ export class CLNetwork {
 
 
 		const title_line_pos = 0.75
-		const legend_middle_x = 1.0 - ((1.0-title_line_pos) * 0.5)
+		this.legend_middle_x = 1.0 - ((1.0-title_line_pos) * 0.5) - 0.01
 
 		// titles
 		svg.select("g.titles").append("text")
@@ -172,6 +174,43 @@ export class CLNetwork {
 			.attr("y", height*(legend_y_placement+0.27))
 
 
+		// details 
+		const detail_y_placement = 0.4
+		const line_gap = 0.03
+		svg.select("g.details").append("text")
+			// .classed("detail", true)
+			.classed("detail_label", true)
+			.text("Team")
+			.attr("x", width*this.legend_middle_x)
+			.attr("y", height*(detail_y_placement))
+
+		svg.select("g.details").append("text")
+			// .classed("detail", true)
+			.classed("detail_label", true)
+			.text("Years Competed")
+			.attr("x", width*this.legend_middle_x)
+			.attr("y", height*(detail_y_placement+line_gap))
+		svg.select("g.details").append("text")
+			.classed("detail_label", true)
+			.text("Trophies")
+			.attr("x", width*this.legend_middle_x)
+			.attr("y", height*(detail_y_placement+2*line_gap))
+		svg.select("g.details").append("text")
+			// .classed("detail", true)
+			.classed("detail_label", true)
+			.text("Matches")
+			.attr("x", width*this.legend_middle_x)
+			.attr("y", height*(detail_y_placement+3*line_gap))
+		svg.select("g.details").append("text")
+			// .classed("detail", true)
+			.classed("detail_label", true)
+			.text("Wins")
+			.attr("x", width*this.legend_middle_x)
+			.attr("y", height*(detail_y_placement+4*line_gap))
+
+
+
+
 		// styling
 
 		svg.select("g.titles")
@@ -182,7 +221,7 @@ export class CLNetwork {
 			.attr("height", height * 0.9)
 			.style("fill","#83bbd9")
 
-
+		this.last_selected = -1
 		this.show_opponents(this.nodes[0])
 
 	}
@@ -219,12 +258,15 @@ export class CLNetwork {
 
 		var locations = Array(this.nodes.length).fill([0,0]);
 
+
 		var text_locations = Array(this.nodes.length).fill([0,0]);
 		var angles = Array(this.nodes.length).fill(0);
+		var opacities = Array(this.nodes.length).fill(0);
 
 		//target team at centre
 		locations[selected_team_idx] = [this.center[0],this.center[1]];
 		text_locations[selected_team_idx] = [this.center[0],this.center[1]];
+		opacities[selected_team_idx] = 1.0
 
 		var weight_to_radius = d3.scaleLinear()
 						.domain([1,20])
@@ -252,20 +294,40 @@ export class CLNetwork {
 			text_locations[team_id] = ([this.center[0]+text_x_offset, this.center[1]+text_y_offset]);
 
 			angles[team_id] = ((angle * 180 / Math.PI) + 90) % 360;
+
+			opacities[team_id] = 1;
 		});
 
 
 
 
-		// here - update positions of nodes 
+		// here - update opacity of nodes 
 		d3.select("g.nodes")
 			.selectAll("circle")
-			.attr("cx", (d,i) => locations[i][0])
-			.attr("cy", (d,i) => locations[i][1])
-			.style("opacity", (d,i) =>  
-				{return hide_elements_without_location(d,i,locations);} )
+			// .transition()
+			// .duration(100)
+			// 	.style("opacity", 0)
 
 
+		// here - update positions of nodes 
+		// d3.select("g.nodes")
+			// .selectAll("circle")
+			// .transition()
+			// .duration(10)
+				.attr("cx", (d,i) => locations[i][0])
+				.attr("cy", (d,i) => locations[i][1])
+				// .style("opacity", (d,i) =>  
+				// 	// {return hide_elements_without_location(d,i,locations);} )
+				// 	{return opacities[i];})
+
+
+		// here - update opacity of nodes 
+		// d3.select("g.nodes")
+		// 	.selectAll("circle")
+			// .transition()
+			// .duration(100)
+				.style("opacity", (d,i) =>  
+					{return opacities[i];})
 
 			
 		d3.select("g.links").selectAll("line").remove();
@@ -337,7 +399,8 @@ export class CLNetwork {
 
 					return "translate(" + loc[0] + "," + loc[1] + ") rotate(" + ang + ")";})
 			.style("opacity", (d,i) =>  
-				{return hide_elements_without_location(d,i,locations);} )
+					{return opacities[i];})
+				// {return hide_elements_without_location(d,i,locations);} )
 			.style("text-anchor", (d,i) => {
 				if (i == selected_team_idx){
 					return "middle";
@@ -353,13 +416,59 @@ export class CLNetwork {
 			.classed("selected", (d,i) => {return (i == selected_team_idx);})
 
 
+			// details 
+
+			d3.select("g.details").selectAll("text.detail").remove();
+
+
+			const detail_y_placement = 0.4
+			const line_gap = 0.03
+			d3.select("g.details").append("text")
+				.classed("detail", true)
+				.text(this.nodes[selected_team_idx].name)
+				.attr("x", this.width*(this.legend_middle_x+0.01))
+				.attr("y", this.height*(detail_y_placement))
+			d3.select("g.details").append("text")
+				.classed("detail", true)
+				.text(this.nodes[selected_team_idx].years)
+				.attr("x", this.width*(this.legend_middle_x+0.01))
+				.attr("y", this.height*(detail_y_placement+line_gap))
+			d3.select("g.details").append("text")
+				.classed("detail", true)
+				.text(this.nodes[selected_team_idx].trophies)
+				.attr("x", this.width*(this.legend_middle_x+0.01))
+				.attr("y", this.height*(detail_y_placement+2*line_gap))
+			d3.select("g.details").append("text")
+				.classed("detail", true)
+				.text(this.nodes[selected_team_idx].matches)
+				.attr("x", this.width*(this.legend_middle_x+0.01))
+				.attr("y", this.height*(detail_y_placement+3*line_gap))
+			d3.select("g.details").append("text")
+				.classed("detail", true)
+				.text((this.nodes[selected_team_idx].win_pc * 100).toFixed(0) + " %")
+				.attr("x", this.width*(this.legend_middle_x+0.01))
+				.attr("y", this.height*(detail_y_placement+4*line_gap))
+
+	}
 
 
 
+	show_details (target_node){
+
+
+
+		const selected_team_idx = target_node.id;
+
+
+		// d3.select("g.details").selectAll("text").attr("opacity",1);
 
 
 	}
 
+	hide_details(target_node){
+
+		// d3.select("g.details").selectAll("text").attr("opacity",0);
+	}
 
 
 }

@@ -131,6 +131,14 @@ link_weights = np.zeros(( NUM_TEAMS,NUM_TEAMS))
 wins = np.zeros(NUM_TEAMS)
 losses = np.zeros(NUM_TEAMS)
 draws = np.zeros(NUM_TEAMS)
+trophies = np.zeros(NUM_TEAMS)
+
+# count which years the teams appeared in
+appearances = []
+for i in range(NUM_TEAMS):
+	appearances.append([])
+
+
 
 for r in results:
 	# ht_id = teams.index(r.ht)
@@ -138,6 +146,7 @@ for r in results:
 
 	ht_id = np.where(teams == r.ht)
 	at_id = np.where(teams == r.at)
+
 
 	# # only do one link weight increment per match
 	if (ht_id > at_id):
@@ -156,7 +165,32 @@ for r in results:
 		wins[at_id] += 1
 		losses[ht_id] += 1
 
+	appearances[ht_id[0][0]].append(r.year)
+	appearances[at_id[0][0]].append(r.year)
+
+	# manual allocation of trophies
+	if r.rnd.lower() == "final":
+		if r.ats > r.hts:
+			trophies[at_id] += 1
+		else:
+			trophies[ht_id] += 1
+		# else:
+			#1996 h
+			#2001 h
+			#2003 h
+			#2005 h
+			#2012 h
+			#2014 h
+			#2016 h 
+			
+
+
 matches = wins + losses + draws
+
+num_appearances = []
+for i in range(NUM_TEAMS):
+	appearances[i] = list(set(appearances[i]))
+	num_appearances.append(len(appearances[i]))
 
 # sort in order of matches played
 # descending_order_idxs = np.flip(np.argsort(matches))
@@ -196,6 +230,8 @@ for team_id in range(len(teams)):
 	team['name'] = teams[team_id]
 	team['matches'] = matches[team_id]
 	team['win_pc'] = win_pc[team_id]
+	team['years'] = num_appearances[team_id]
+	team['trophies'] = trophies[team_id]
 	json_obj['nodes'].append(team)
 
 
