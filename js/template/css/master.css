@@ -64,3 +64,9 @@ rect.label_bg {
 	fill:#fff;
 	opacity:0.7;
 }
+
+circle {
+	stroke:#fff;
+	stroke-width:0;
+}
+
