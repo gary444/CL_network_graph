@@ -71,7 +71,7 @@ team_lookup['Club Brugge KV']='Club Brugge'
 team_lookup['D. Zagreb']='Dinamo Zagreb'
 team_lookup['Borussia Dortmund']='Dortmund'
 team_lookup['Dyn. Kyiv']='Dinamo Kiev'
-team_lookup['Inter']='Internazionale'
+team_lookup['Internazionale']='Inter'
 team_lookup['Kobenhavn']='FC Copenhagen'
 team_lookup['Legia']='Legia Warsaw'
 team_lookup['Lokomotiv Moskva']='Lokomotiv Moscow'
@@ -126,6 +126,9 @@ teams = np.array(teams)[descending_order_idxs]
 # build link weight matrix
 
 link_weights = np.zeros(( NUM_TEAMS,NUM_TEAMS))
+link_ht_wins = np.zeros(( NUM_TEAMS,NUM_TEAMS))
+link_at_wins = np.zeros(( NUM_TEAMS,NUM_TEAMS))
+link_draws   = np.zeros(( NUM_TEAMS,NUM_TEAMS))
 
 
 wins = np.zeros(NUM_TEAMS)
@@ -158,12 +161,18 @@ for r in results:
 	if (r.hts > r.ats):
 		wins[ht_id] += 1
 		losses[at_id] += 1
+		link_ht_wins[ht_id, at_id] += 1
+		link_ht_wins[at_id, ht_id] += 1
 	elif (r.hts == r.ats):
 		draws[ht_id] += 1
 		draws[at_id] += 1
+		link_draws[ht_id, at_id] += 1
+		link_draws[at_id, ht_id] += 1
 	else:
 		wins[at_id] += 1
 		losses[ht_id] += 1
+		link_at_wins[ht_id, at_id] += 1
+		link_at_wins[at_id, ht_id] += 1
 
 	appearances[ht_id[0][0]].append(r.year)
 	appearances[at_id[0][0]].append(r.year)
@@ -247,6 +256,11 @@ for l in range(np.shape(link_idxs)[1]):
 	link['source'] = str(ht_id)
 	link['target'] = str(at_id)
 	link['weight'] = str(link_weights[ht_id][at_id])
+
+	link['source_wins'] = str(link_ht_wins[ht_id][at_id])
+	link['draws'] = str(link_draws[ht_id][at_id])
+	link['target_wins'] = str(link_at_wins[ht_id][at_id])
+
 	json_obj['links'].append(link)
 
 

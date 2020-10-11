@@ -4,30 +4,39 @@ body {
 
     /*font-family: Verdana, Geneva, sans-serif;*/
     font-family: 'Lato', sans-serif;
+
+	transform-box: fill-box; 
+}
+
+svg {
+	transform-origin: 0px 0px;
+	transform-box: fill-box; 
 }
 
 text.title {
 	fill:#fff;
-	font-size: 200%;
-	text-anchor: start;
+	font-size: 2.5vw;
+	text-anchor: middle;
 }
 
 text.subtitle {
 	fill:#888;
-	font-size: 80%;
-	text-anchor: start;
+	font-size: 1vw;
+	/*text-anchor: start;*/
+	text-anchor: middle;
 }
 text.legend {
 
-	text-anchor: start;
+	text-anchor: middle;
 	fill:#888;
-	font-size: 80%;
+	font-size: 1vw;
 
 }
 text.scale {
 
 	text-anchor: middle;
 	/*fill:#888;*/
+	font-size: 1vw;
 	/*font-size: 80%;*/
 
 }
@@ -37,32 +46,71 @@ text.detail {
 	text-anchor: start;
 	fill:#fff;
 	/*font-size: 80%;*/
+	font-size: 1vw;
+
 
 }
+
+text.link_detail {
+
+	text-anchor: start;
+	fill:#fff;
+	/*font-size: 80%;*/
+	font-size: 1vw;
+
+
+}
+text.pc_link_detail {
+
+	text-anchor: start;
+	fill:#888;
+	/*font-size: 80%;*/
+	font-size: 1vw;
+
+
+}
+
+
 
 text.detail_label {
 
 	text-anchor: end;
 	fill:#888;
+	font-size: 1vw;
+
 }
 
 
 text.label {
 	fill:#888;
-	font-size: 100%;
+	font-size: 1vw;
 	/*font-family: Verdana, Geneva, sans-serif;*/
 	text-anchor: middle;
-	baseline-shift: 50;
+	baseline-shift: -10%;
+	transform-origin: 0px 0px;
+
 }
 
 text.selected {
 	/*fill:#000;*/
-	fill:#010511;
-
-}
-rect.label_bg {
+	/*fill:#010511;*/
 	fill:#fff;
-	opacity:0.7;
+
+	/*font-size: 100%;*/
+	text-anchor: middle;
+}
+
+text.weight_label {
+	fill:#555;
+	/*baseline-shift: -100%;*/
+	vertical-align: -100%;
+	font-size: 1vw;
+	text-anchor: middle;
+}
+
+rect.label_bg {
+	fill:#222;
+	opacity:0.8;
 }
 
 circle {
@@ -70,3 +118,37 @@ circle {
 	stroke-width:0;
 }
 
+circle.weight_label {
+	fill:#fff;
+
+}
+
+line {
+	stroke: #999;
+	/*stroke-opacity:1;*/
+	stroke-width:1;
+	pointer-events: none;
+}
+
+line.under {
+	/*stroke: #999;*/
+	stroke-opacity:0;
+	stroke-width:6;
+	pointer-events: all;
+
+}
+line.source_win {
+	stroke:#fff;
+	stroke-width:4;
+}
+
+line.draw {
+	stroke:#999;
+	stroke-width:2;
+}
+
+
+line.target_wins{
+	stroke:#555;
+	stroke-width:1;
+}

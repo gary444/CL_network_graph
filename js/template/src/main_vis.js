@@ -7,6 +7,7 @@ const svg_height = window.innerHeight-4;
 
 d3.json("./data/cl_nodes_links_ordered.json").then(function(data) {
 
+	console.log(data)
 
 	const color = d3.scaleSequentialSqrt(d3.interpolateRdBu).domain([0.1,0.7]);
 
